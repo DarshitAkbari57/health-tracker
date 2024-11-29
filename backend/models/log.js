@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Log.init({
-    userId: DataTypes.INTEGER,
+    userId: DataTypes.STRING,
     moodRating: DataTypes.INTEGER,
     anxietyLevel: DataTypes.INTEGER,
     sleepHours: DataTypes.FLOAT,

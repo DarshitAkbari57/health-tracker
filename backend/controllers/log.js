@@ -1,11 +1,9 @@
-// controller/logController.js
 const logService = require('../services/log');
 
 exports.createLog = async (req, res) => {
     try {
         const { userId, moodRating, anxietyLevel, sleepHours, sleepQuality, sleepDisturbances, physicalActivity, activityDuration, socialInteractions, stressLevel, symptoms, logDate } = req.body;
 
-        // Validate required fields
         if (!userId || !moodRating || !anxietyLevel || !sleepHours || !sleepQuality || !stressLevel || !logDate) {
             return res.status(400).json({ message: 'Required fields missing', error: 'Missing required fields' });
         }
@@ -33,12 +31,19 @@ exports.createLog = async (req, res) => {
 
 exports.getAllLogs = async (req, res) => {
     try {
-        const logs = await logService.getAllLogs();
+        const { userId } = req.query;
+
+        let logs;
+        if (userId) {
+            logs = await logService.getLogsByUserId(userId);
+        }
+
         return res.status(200).json({ message: 'Logs fetched successfully', data: logs });
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching logs', error: error.message });
     }
 };
+
 
 exports.getLogById = async (req, res) => {
     try {

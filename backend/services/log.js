@@ -1,4 +1,3 @@
-// services/logService.js
 const db = require("../models");
 
 exports.createLog = async (logData) => {
@@ -11,6 +10,12 @@ exports.getAllLogs = async () => {
 
 exports.getLogById = async (id) => {
     return await db.Log.findByPk(id);
+};
+
+exports.getLogsByUserId = async (userId) => {
+    return await db.Log.findAll({
+        where: { userId }
+    });
 };
 
 exports.updateLog = async (id, logData) => {

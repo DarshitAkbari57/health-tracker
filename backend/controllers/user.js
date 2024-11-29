@@ -1,13 +1,17 @@
-// controllers/userController.js
 const userService = require('../services/user');
 
 exports.createUser = async (req, res) => {
   try {
     const { googleId, name, email } = req.body;
 
-    // Validate required fields
     if (!googleId || !name || !email) {
       return res.status(400).json({ message: 'Required fields missing', error: 'Missing required fields' });
+    }
+
+    const existingUser = await userService.getUserByGoogleId(googleId);
+
+    if (existingUser) {
+      return res.status(201).json({ message: 'User already exists', error: 'User with this Google ID already exists' });
     }
 
     const newUser = await userService.createUser({ googleId, name, email });
@@ -16,6 +20,7 @@ exports.createUser = async (req, res) => {
     return res.status(500).json({ message: 'Error creating user', error: error.message });
   }
 };
+
 
 exports.getAllUsers = async (req, res) => {
   try {

@@ -1,5 +1,13 @@
-// services/user.js
 const db = require("../models");
+
+exports.getUserByGoogleId = async (googleId) => {
+  try {
+    const user = await db.User.findOne({ where: { googleId } });
+    return user;
+  } catch (error) {
+    throw new Error('Error finding user');
+  }
+};
 
 exports.createUser = async (userData) => {
   try {
