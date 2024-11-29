@@ -43,7 +43,6 @@ const Logs = () => {
             <TableHead>
               <TableRow className="bg-gray-200">
                 <TableCell className="!font-bold">Log ID</TableCell>
-                {/* <TableCell className="!font-bold">User ID</TableCell> */}
                 <TableCell className="!font-bold">Mood Rating</TableCell>
                 <TableCell className="!font-bold">Anxiety Level</TableCell>
                 <TableCell className="!font-bold">Sleep Hours</TableCell>
@@ -60,7 +59,6 @@ const Logs = () => {
                   className="hover:!bg-green-50 transition duration-300"
                 >
                   <TableCell>{log.id}</TableCell>
-                  {/* <TableCell>{log.userId}</TableCell> */}
                   <TableCell>{log.moodRating}</TableCell>
                   <TableCell>{log.anxietyLevel}</TableCell>
                   <TableCell>{log.sleepHours}</TableCell>
