@@ -1,3 +1,4 @@
+const db = require('../models');
 const logService = require('../services/log');
 
 exports.createLog = async (req, res) => {
@@ -8,6 +9,21 @@ exports.createLog = async (req, res) => {
             return res.status(400).json({ message: 'Required fields missing', error: 'Missing required fields' });
         }
 
+        const existingLog = await db.Log.findOne({
+            where: {
+                userId,
+                logDate: new Date(logDate),
+            },
+        });
+
+        if (existingLog) {
+            return res.status(400).json({
+                message: 'Log already exists for this user on the specified date',
+                error: 'Duplicate logDate for userId',
+            });
+        }
+
+        // Create the new log if no matching log exists
         const newLog = await logService.createLog({
             userId,
             moodRating,
@@ -20,7 +36,7 @@ exports.createLog = async (req, res) => {
             socialInteractions,
             stressLevel,
             symptoms,
-            logDate
+            logDate: new Date(logDate), // Store logDate as a Date object
         });
 
         return res.status(201).json({ message: 'Log created successfully', data: newLog });

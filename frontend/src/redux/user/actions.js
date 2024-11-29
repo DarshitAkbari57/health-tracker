@@ -59,13 +59,13 @@ export const AddLog = (payload, dispatch) => {
                     type: actionTypes.ADD_LOG_SUCCESS,
                     payload: response.data,
                 });
-                return response.data;
+                return response;
             } else {
                 dispatch({
                     type: actionTypes.ADD_LOG_FAIL,
                     payload: response?.data?.message,
                 });
-                return response.data;
+                return response;
             }
         } catch (error) {
             console.log("error", error);

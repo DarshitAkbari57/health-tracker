@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { auth } from "../firebase";
 import { useDispatch } from "react-redux";
 import { AddLog, LoginAPI } from "../redux/user/actions";
+import moment from "moment";
 
 const { TextArea } = Input;
 
@@ -45,13 +46,17 @@ const LogForm = () => {
         await dispatch(AddLog(obj))
           .then((res) => {
             console.log("res", res);
+            if (res?.status === 400) {
+              message.error(res?.data?.message);
+            } else if (res?.status === 201) {
+              message.success("Log submitted successfully!");
+              navigate("/logs");
+              form.resetFields();
+            }
           })
           .catch((error) => {
             console.log("failed", error);
           });
-        message.success("Log submitted successfully!");
-        navigate("/logs");
-        form.resetFields();
       })
       .catch((error) => {
         console.error("Validation error:", error);
@@ -107,8 +112,11 @@ const LogForm = () => {
             >
               <InputNumber min={0} className="w-full" />
             </Form.Item>
-            <Form.Item label="Social Interactions" name="social_interactions">
-              <InputNumber min={0} className="w-full" />
+            <Form.Item
+              label="Frequency of Social Interactions (1-10)"
+              name="social_interactions"
+            >
+              <InputNumber min={0} max={10} className="w-full" />
             </Form.Item>
             <Form.Item
               label="Log Date"

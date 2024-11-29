@@ -5,12 +5,12 @@ import { getFirestore } from "firebase/firestore";
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB6HJNE6rL5aJfzn65-3j5akobeER6hfMM",
-    authDomain: "mental-health-tracker-a100a.firebaseapp.com",
-    projectId: "mental-health-tracker-a100a",
-    storageBucket: "mental-health-tracker-a100a.firebasestorage.app",
-    messagingSenderId: "719195406949",
-    appId: "1:719195406949:web:688b59aab294800df07c8c"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase

@@ -7,6 +7,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const userRoutes = require("./Router/user");
 const logRoutes = require('./Router/log');
+const { Op } = require("sequelize");
 
 app.use(cors('*'));
 require("dotenv").config();
@@ -25,35 +26,55 @@ const io = new Server(server, {
 });
 
 let intervalId;
+
 io.on("connection", (socket) => {
   console.log("New client connected");
 
   socket.on("chartData", (message) => {
-    console.log("Message from client: ", message);
+    console.log("Message from client: ", message?.view);
 
-    if (message === "Hello from client!") {
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+
+    if (message) {
       intervalId = setInterval(async () => {
+        const dateFilter = message.view === "monthly" ? 30 : 7;
+
         try {
           const logs = await db.Log.findAll({
-            attributes: ['moodRating', 'stressLevel', 'activityDuration', 'anxietyLevel', 'sleepHours', 'logDate'], // Include the new fields
-            limit: 7,
-            order: [['logDate', 'DESC']],
+            attributes: [
+              "moodRating",
+              "stressLevel",
+              "activityDuration",
+              "anxietyLevel",
+              "sleepHours",
+              "logDate",
+            ],
+            where: {
+              logDate: {
+                [Op.gte]: new Date(new Date() - dateFilter * 24 * 60 * 60 * 1000),
+              },
+            },
+            order: [["logDate", "ASC"]],
           });
 
           socket.emit("chartData", logs);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
-      }, 2000);
+      }, 1000);
     }
   });
 
-
   socket.on("disconnect", () => {
     console.log("Client disconnected");
-    if (intervalId) clearInterval(intervalId);
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
   });
 });
+
 
 // Routes
 app.use("/users", userRoutes);
